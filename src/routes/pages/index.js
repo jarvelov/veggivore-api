@@ -1,4 +1,5 @@
 const restify = require('restify');
+const passport = require('passport-restify');
 
 module.exports = (server, models, config) => {
 
@@ -11,7 +12,7 @@ module.exports = (server, models, config) => {
         isRequired: true
       }
     }
-  }, (req, res, next) => {
+  }, passport.authenticate('jwt'), (req, res, next) => {
     return models.Pages.remove({
         uri: req.params.uri
       })
@@ -35,7 +36,7 @@ module.exports = (server, models, config) => {
         isRequired: true
       }
     }
-  }, (req, res, next) => {
+  }, (req, res, next) => { //No authentication required
     return models.Pages.findOne({
         uri: req.params.uri
       })
@@ -47,7 +48,8 @@ module.exports = (server, models, config) => {
       })
       .then(page => {
         res.json({
-          uri: page
+          success: true,
+          data: page
         });
       })
       .catch(err => {
@@ -66,7 +68,7 @@ module.exports = (server, models, config) => {
         }
       }
     }
-  }, (req, res, next) => {
+  }, passport.authenticate('jwt'), (req, res, next) => {
     return models.Pages.update({
         params: {}
       }, {
@@ -90,5 +92,5 @@ module.exports = (server, models, config) => {
   require('./products')(server, models, config);
   require('./recipes')(server, models, config);
   require('./restaurants')(server, models, config);
-  //require('./companies')(server, models, config);
+  require('./companies')(server, models, config);
 };

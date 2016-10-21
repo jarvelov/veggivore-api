@@ -1,3 +1,6 @@
+const restify = require('restify');
+const passport = require('passport-restify');
+
 module.exports = (server, models, config) => {
   server.post('/users/login', passport.authenticate('local'), (req, res, next) => {
     res.json({

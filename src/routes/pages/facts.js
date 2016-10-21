@@ -1,4 +1,5 @@
 const restify = require('restify');
+const passport = require('passport-restify');
 
 module.exports = (server, models, config) => {
 
@@ -31,8 +32,7 @@ module.exports = (server, models, config) => {
         }
       }
     }
-  }, (req, res, next) => {
-    console.log(req.params);
+  }, passport.authenticate('jwt'), (req, res, next) => {
     const Page = new models.Pages(req.params);
     return Page.save()
       .then(result => {
