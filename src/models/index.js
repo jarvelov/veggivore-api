@@ -1,10 +1,14 @@
-module.exports = (models, config) => {
-  const schemas = {
-    Pages: {}
-  };
+module.exports = (config) => {
+  const models = {};
 
-  schemas.Pages = require('./pages')(schemas, models, config);
-  schemas.Users = require('./users')(schemas, models, config);
+  // First get the reusable embedded models
+  models.Embedded = require('./embedded')(models, config);
 
-  return schemas;
+  // Then the normal ones
+  models.Companies = require('./companies')(models, config);
+  models.Pages = require('./pages')(models, config);
+  models.Revisions = require('./revisions')(models, config);
+  models.Users = require('./users')(models, config);
+
+  return models;
 };

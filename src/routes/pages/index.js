@@ -2,11 +2,18 @@ const restify = require('restify');
 
 module.exports = (server, models, config) => {
 
+  // Delete a page
+
   server.del({
-    path: '/pages/:url'
+    path: '/pages/:uri',
+    validation: {
+      id: {
+        isRequired: true
+      }
+    }
   }, (req, res, next) => {
     return models.Pages.remove({
-        url: req.params.url
+        uri: req.params.uri
       })
       .then(result => {
         res.json({
@@ -19,21 +26,28 @@ module.exports = (server, models, config) => {
       });
   });
 
+  // Get a page
+
   server.get({
-    path: '/pages/:url'
+    path: '/pages/:uri',
+    validation: {
+      uri: {
+        isRequired: true
+      }
+    }
   }, (req, res, next) => {
     return models.Pages.findOne({
-        url: req.params.url
+        uri: req.params.uri
       })
       .then(result => {
         if (!result) {
-          throw new restify.NotFoundError('Page with URL ' + req.params.url + ' was not found');
+          throw new restify.NotFoundError('Page with URI ' + req.params.uri + ' was not found');
         }
         return result;
       })
       .then(page => {
         res.json({
-          url: page
+          uri: page
         });
       })
       .catch(err => {
@@ -41,13 +55,22 @@ module.exports = (server, models, config) => {
       });
   });
 
+  // Update a page
+
   server.put({
-    path: '/pages/:url'
+    path: '/pages/:uri',
+    validation: {
+      resources: {
+        uri: {
+          isRequired: true
+        }
+      }
+    }
   }, (req, res, next) => {
     return models.Pages.update({
         params: {}
       }, {
-        url: req.params.url
+        uri: req.params.uri
       })
       .then(result => {
         res.json({
@@ -60,20 +83,12 @@ module.exports = (server, models, config) => {
       });
   });
 
-  server.post({
-    path: '/pages'
-  }, (req, res, next) => {
-    return models.Pages.insert({
-        url: req.params.url
-      })
-      .then(result => {
-        res.json({
-          success: true
-        });
-      })
-      .catch(err => {
-        console.log(err);
-        return next(err);
-      });
-  });
+  // Require the specific pages
+
+  require('./cafes')(server, models, config);
+  require('./facts')(server, models, config);
+  require('./products')(server, models, config);
+  require('./recipes')(server, models, config);
+  require('./restaurants')(server, models, config);
+  //require('./companies')(server, models, config);
 };

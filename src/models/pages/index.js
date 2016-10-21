@@ -2,13 +2,9 @@ const mongoose = require('mongoose');
 const autopopulate = require('mongoose-autopopulate');
 const Schema = mongoose.Schema;
 
-module.exports = (schemas, config) => {
+module.exports = (models, config) => {
   const Pages = new Schema({
-    url: {
-      type: String,
-      required: true
-    },
-    name: {
+    uri: {
       type: String,
       required: true
     },
@@ -19,8 +15,18 @@ module.exports = (schemas, config) => {
       autopopulate: true
     },
     revision: {
-      type: Schema.Types.ObjectId,
-      ref: 'Revisions'
+      current: {
+        type: Schema.Types.ObjectId,
+        ref: 'Revisions',
+        autopopulate: true
+      },
+      history: {
+        type: [Schema.Types.ObjectId],
+        ref: 'Revisions'
+      }
+    },
+    contributors: {
+      type: [models.Embedded.Contributor.schema]
     },
     meta: {
       likes: {

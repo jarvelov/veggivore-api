@@ -1,0 +1,51 @@
+const restify = require('restify');
+
+module.exports = (server, models, config) => {
+
+  server.post({
+    'path': '/pages/recipes',
+    'validation': {
+      'resources': {
+        'title': {
+          'isRequired': true
+        },
+        'ingredients': {
+          'isRequired': true
+        },
+        'content': {
+          'isRequired': true
+        },
+        'categories': {
+          'isRequired': true
+        },
+        'tags': {
+          'isRequired': false
+        },
+        'sources': {
+          'isRequired': false,
+          'isArray': true //TODO: This validator doesn't exist, create it
+        },
+        'images': {
+          'isRequired': false,
+          'isArray': true //TODO: This validator doesn't exist, create it
+        },
+        'anonymous': {
+          'isRequired': false
+        }
+      }
+    }
+  }, (req, res, next) => {
+    const Page = new models.Pages(req.params);
+    return Page.save()
+      .then(result => {
+        res.json({
+          success: true,
+          data: result
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        return next(err);
+      });
+  });
+};

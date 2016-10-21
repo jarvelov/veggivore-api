@@ -3,7 +3,7 @@ const autopopulate = require('mongoose-autopopulate');
 const bcrypt = require('bcrypt-as-promised');
 const Schema = mongoose.Schema;
 
-module.exports = (schemas, config) => {
+module.exports = (models, config) => {
   const Users = new Schema({
     name: {
       first: {
@@ -47,7 +47,7 @@ module.exports = (schemas, config) => {
   });
 
   Users.pre('save', function(next) {
-    var user = this;
+    let user = this;
 
     // only hash the password if it has been modified (or is new)
     if (!user.isModified('password')) return next();
@@ -60,11 +60,25 @@ module.exports = (schemas, config) => {
       });
   });
 
-  Users.methods.updatePassword = function(password, cb) {
-    bcrypt.compare(this.password, password)
-      .then(isMatch => {
-        cb(isMatch);
-      });
+  Users.methods.comparePassword = function(password) {
+    let user = this;
+
+    return bcrypt.compare(password, user.password);
+  };
+
+  Users.methods.updatePassword = function(password) {
+    let user = this;
+
+    return user.comparePassword(password)
+    .then(isMatch => {
+      if(!isMatch) {
+        return bcrypt.hash(password, 10)
+        .then(hash => {
+          user.password = hash;
+          return user.save();
+        });
+      }
+    });
   };
 
   return mongoose.model('Users', Users);
