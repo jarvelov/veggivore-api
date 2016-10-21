@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "mongoose": "^4.6.4",
     "nodemon": "^1.11.0",
     "restify": "^4.1.1"
   },
@@ -9,7 +10,7 @@
     "babel-preset-es2015": "^6.16.0",
     "clean-webpack-plugin": "^0.1.13",
     "gulp": "^3.9.1",
-    "gulp-nodemon": "^2.2.1",
+    "gulp-util": "^3.0.7",
     "webpack": "^1.13.2",
     "webpack-node-externals": "^1.5.4"
   }

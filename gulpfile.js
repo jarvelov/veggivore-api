@@ -1,44 +1,38 @@
 const gulp = require('gulp');
-const nodemon = require('gulp-nodemon');
-const gulpClean = require('gulp-clean');
+const gutil = require('gulp-util');
+const nodemon = require('nodemon');
+const webpack = require('webpack');
 
 const config = require('./webpack.config');
 
-gulp.task('clean', (cb) => {
-  return gulp.src(config.buildDir, {read: false})
-    .pipe(gulpClean());
-});
+gulp.task('webpack:build', (cb) => {
+  let called = false;
+  webpack(config).watch(100, (err, info) => {
+    if (err) {
+      throw new gutil.PluginError("webpack:build", err);
+    }
+    gutil.log("[webpack:build]", info.toString({
+      colors: true
+    }));
 
-gulp.task('build', (cb) => {
-    webpack(config).run((err, info) => {
-      if(err) {
-        console.error('Error', err);
-      } else {
-        console.log(stats.toString());
-      }
-
+    if (!called) {
+      called = true;
       cb();
-    });
-});
+    }
 
-gulp.task('watch', (cb) => {
-  webpack(config).watch(100, (err, stats) => {
     nodemon.restart();
-    cb();
   });
 });
 
-gulp.task('run', ['watch'], () => {
+gulp.task('run', ['webpack:build'], () => {
   nodemon({
     execMap: {
       js: 'node'
     },
-    script: path.join(__dirname, 'build/server.js'),
+    script: config.output.path + config.output.filename,
     ignore: ['*'],
     ext: 'noop'
-  }).on('restart', () => {
-    console.log('Patched!');
   });
 });
 
-gulp.task('default', ['clean', 'build', 'watch']);
+gulp.task('default', ['run']);
