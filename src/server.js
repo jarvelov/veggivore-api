@@ -1,10 +1,9 @@
-var restify = require('restify'),
-fs = require('fs');
+// Dependencies
+import { restify } from 'restify';
 
-var server = restify.createServer({
-  certificate: fs.readFileSync('path/to/server/certificate'),
-  key: fs.readFileSync('path/to/server/key'),
-  name: 'MyApp',
+// Start server
+const server = restify.createServer({
+  name: 'MyApp'
 });
 
 server.listen(8080);
