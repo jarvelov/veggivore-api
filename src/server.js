@@ -5,9 +5,9 @@ const mongoose = require('mongoose');
 
 // Start server
 const server = restify.createServer({
-  name: 'MyApp'
+  name: config.name
 });
 
-server.listen(8080, function () {
+server.listen(config.host.port, function () {
     console.log('servers listening at %s', server.url);
 });
