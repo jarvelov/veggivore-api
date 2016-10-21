@@ -3,6 +3,7 @@
     "bcrypt-as-promised": "^1.1.0",
     "mongoose": "^4.6.4",
     "mongoose-autopopulate": "^0.4.0",
+    "node-restify-validation": "^1.0.5",
     "nodemon": "^1.11.0",
     "restify": "^4.1.1"
   },

@@ -10,4 +10,5 @@ module.exports = (server, models, config) => {
 
   //TODO: Just do a bulk require here
   require('./pages')(server, models, config);
+  require('./users')(server, models, config);
 };

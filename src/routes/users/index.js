@@ -1,64 +1,119 @@
-const mongoose = require('mongoose');
-const autopopulate = require('mongoose-autopopulate');
-const brypt = require('bcrypt-as-promised');
-const Schema = mongoose.Schema;
-
-module.exports = (schemas, config) => {
-  const Users = new Schema({
-    name: {
-      first: {
-        type: String,
-        required: true
-      },
-      last: {
-        type: String,
-        required: true
-      }
-    },
-    password: {
-      type: String,
-      required: true
-    },
-    email: {
-      type: String,
-      required: true
-    },
-    profile: {
-      description: {
-        type: String
-      },
-      image: {
-        type: Schema.Types.ObjectId,
-        ref: 'Images'
-      },
-      website: {
-        type: String
-      }
-    }
-  }, {
-    timestamps: true
-  });
-
-  Users.pre('save', function(next) {
-    var user = this;
-
-    // only hash the password if it has been modified (or is new)
-    if (!user.isModified('password')) return next();
-
-    // hash the password with a salt factor of 10
-    return bcrypt.hash(user.password, 10)
-      .then(hash => {
-        user.password = hash; //override the user's clear text password
-        next();
+module.exports = (server, models, config) => {
+  server.del({
+    path: '/users/:id'
+  }, (req, res, next) => {
+    return models.Users.remove({
+        id: req.params.id
+      })
+      .then(result => {
+        res.json({
+          success: true
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        return next(err);
       });
   });
 
-  Users.methods.updatePassword = function(password, cb) {
-    bcrypt.compare(this.password, password)
-    .then(isMatch => {
-      cb(isMatch);
-    });
-  };
+  server.get({
+    path: '/users/:id'
+  }, (req, res, next) => {
+    return models.Users.findOne({
+        id: req.params.id
+      })
+      .then(result => {
+        if (!result) {
+          throw new restify.NotFoundError('User ' + req.params.id + ' was not found');
+        }
+        return result;
+      })
+      .then(user => {
+        res.json({
+          user: user
+        });
+      })
+      .catch(err => {
+        return next(err);
+      });
+  });
 
-  return mongoose.model('Users', Users);
+  server.put({
+    path: '/users/:id'
+  }, (req, res, next) => {
+    return models.Users.update({
+        params: {}
+      }, {
+        id: req.params.id
+      })
+      .then(result => {
+        res.json({
+          success: true
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        return next(err);
+      });
+  });
+
+  server.post({
+    path: '/users',
+    validation: {
+      resources: {
+        name: {
+          first: {
+            isRequired: true
+          },
+          last: {
+            isRequired: true
+          }
+        },
+        password: {
+          isRequired: true
+        },
+        email: {
+          isRequired: true,
+          isEmail: true
+        },
+        profile: {
+          description: {
+            isRequired: false
+          },
+          image: {
+            isRequired: false
+          },
+          website: {
+            isRequired: false
+          }
+        }
+      }
+    }
+  }, (req, res, next) => {
+    const User = new models.Users({
+      name: {
+        first: req.params.name.first,
+        last: req.params.name.last
+      },
+      email: req.params.email,
+      password: req.params.password
+    });
+
+    User.save()
+      .then(result => {
+        result = result.toObject();
+        delete result.password;
+        return result;
+      })
+      .then(user => {
+        res.json({
+          success: true,
+          data: result
+        });
+      })
+      .catch(err => {
+        console.log(err);
+        return next(err);
+      });
+  });
 };

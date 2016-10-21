@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const autopopulate = require('mongoose-autopopulate');
-const brypt = require('bcrypt-as-promised');
+const bcrypt = require('bcrypt-as-promised');
 const Schema = mongoose.Schema;
 
 module.exports = (schemas, config) => {
@@ -17,11 +17,14 @@ module.exports = (schemas, config) => {
     },
     password: {
       type: String,
-      required: true
+      required: true,
+      select: false
     },
     email: {
       type: String,
-      required: true
+      required: true,
+      index: true,
+      unique: true
     },
     profile: {
       description: {
@@ -37,6 +40,10 @@ module.exports = (schemas, config) => {
     }
   }, {
     timestamps: true
+  });
+
+  Users.set('toJSON', {
+    virtuals: true
   });
 
   Users.pre('save', function(next) {
@@ -55,9 +62,9 @@ module.exports = (schemas, config) => {
 
   Users.methods.updatePassword = function(password, cb) {
     bcrypt.compare(this.password, password)
-    .then(isMatch => {
-      cb(isMatch);
-    });
+      .then(isMatch => {
+        cb(isMatch);
+      });
   };
 
   return mongoose.model('Users', Users);
