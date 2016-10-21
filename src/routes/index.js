@@ -1,5 +1,5 @@
 module.exports = (server, models, config) => {
-  server.get('/', (req, res, next) => {
+  server.get('/', (req, res, next) => { //No authentication required
     res.json({
       DELETE: server.router.routes.DELETE,
       GET: server.router.routes.GET,

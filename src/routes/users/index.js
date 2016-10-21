@@ -145,9 +145,10 @@ module.exports = (server, models, config) => {
       }, {
         id: req.params.id
       })
-      .then(user => {
+      .then(result => {
         res.json({
-          success: true
+          success: true,
+          data: result
         });
       })
       .catch(err => {
@@ -188,7 +189,7 @@ module.exports = (server, models, config) => {
         }
       }
     }
-  }, passport.authenticate('jwt'), (req, res, next) => {
+  }, (req, res, next) => { //No authentication required
     const User = new models.Users({
       name: {
         first: req.params.name.first,
@@ -201,10 +202,10 @@ module.exports = (server, models, config) => {
     return User.save()
       .then(result => {
         result = result.toObject();
-        delete result.password;
+        delete result.password; //We don't want to expose the password, remove it before sending
         return result;
       })
-      .then(user => {
+      .then(result => {
         res.json({
           success: true,
           data: result
