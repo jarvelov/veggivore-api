@@ -6,13 +6,14 @@ module.exports = (server, models, config) => {
   opts.jwtFromRequest = ExtractJwt.fromAuthHeader();
   opts.secretOrKey = config.restify.authentication.secret;
 
-  return new JwtStrategy(opts, function(jwt_payload, done) {
+  return new JwtStrategy(opts, (payload, done) => {
     return models.Users.findOne({
-      _id: jwt_payload.userId
+      _id: payload.userId
     })
     .then(user => {
-      if(user) {
+      if (user) {
         done(null, user);
+      } else {
       }
     });
   });
