@@ -12,7 +12,8 @@ module.exports = (server, models, config) => {
   server.del({
     'path': '/users/:id'
   }, passport.authenticate('jwt'), (req, res, next) => {
-    return models.Users.remove({
+    return models.Users
+      .remove({
         id: req.params.id
       })
       .then(result => {
@@ -54,7 +55,8 @@ module.exports = (server, models, config) => {
     }
   }, passport.authenticate('jwt'), (req, res, next) => {
     console.log(req.params);
-    return models.Users.find({
+    return models.Users
+      .find({
         id: req.params.id
       })
       .then(result => {
@@ -84,7 +86,8 @@ module.exports = (server, models, config) => {
       }
     }
   }, (req, res, next) => {
-    return models.Users.findOne({
+    return models.Users
+      .findOne({
         id: req.params.id
       })
       .then(result => {
@@ -140,7 +143,8 @@ module.exports = (server, models, config) => {
       }
     }
   }, passport.authenticate('jwt'), (req, res, next) => {
-    return models.Users.update({
+    return models.Users
+      .update({
         'params': {}
       }, {
         id: req.params.id

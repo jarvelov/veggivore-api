@@ -12,7 +12,8 @@ module.exports = (server, models, config) => {
       }
     }
   }, passport.authenticate('jwt'), (req, res, next) => {
-    return models.Pages.remove({
+    return models.Pages
+      .remove({
         uri: req.params.uri
       })
       .then(result => {
@@ -30,7 +31,8 @@ module.exports = (server, models, config) => {
   server.get({
     path: '/pages'
   }, (req, res, next) => { // No authentication required
-    return models.Pages.find({})
+    return models.Pages
+      .find({})
       .then(result => {
         if (!result) {
           throw new restify.NotFoundError('No pages were found in the database!');
@@ -59,7 +61,8 @@ module.exports = (server, models, config) => {
       }
     }
   }, (req, res, next) => { // No authentication required
-    return models.Pages.findOne({
+    return models.Pages
+      .findOne({
         uri: req.params.uri
       })
       .then(result => {
@@ -90,7 +93,8 @@ module.exports = (server, models, config) => {
       }
     }
   }, passport.authenticate('jwt'), (req, res, next) => {
-    return models.Pages.update({
+    return models.Pages
+      .update({
         params: {}
       }, {
         uri: req.params.uri
