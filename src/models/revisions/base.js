@@ -17,11 +17,11 @@ module.exports = (models, config) => {
     },
     images: {
       type: [Schema.Types.ObjectId],
-      ref: 'Images',
+      ref: 'Images'
     },
     categories: {
       type: [Schema.Types.ObjectId],
-      ref: 'Categories',
+      ref: 'Categories'
     },
     tags: {
       type: [Schema.Types.ObjectId],

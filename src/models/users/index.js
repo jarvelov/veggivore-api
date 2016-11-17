@@ -46,7 +46,7 @@ module.exports = (models, config) => {
     virtuals: true
   });
 
-  Users.pre('save', function(next) {
+  Users.pre('save', function (next) {
     let user = this;
 
     // only hash the password if it has been modified (or is new)
@@ -55,23 +55,23 @@ module.exports = (models, config) => {
     // hash the password with a salt factor of 10
     return bcrypt.hash(user.password, 10)
       .then(hash => {
-        user.password = hash; //override the user's clear text password
+        user.password = hash; // override the user's clear text password
         next();
       });
   });
 
-  Users.methods.comparePassword = function(password) {
+  Users.methods.comparePassword = function (password) {
     let user = this;
 
     return bcrypt.compare(password, user.password);
   };
 
-  Users.methods.updatePassword = function(password) {
+  Users.methods.updatePassword = function (password) {
     let user = this;
 
     return user.comparePassword(password)
     .then(isMatch => {
-      if(!isMatch) {
+      if (!isMatch) {
         return bcrypt.hash(password, 10)
         .then(hash => {
           user.password = hash;
