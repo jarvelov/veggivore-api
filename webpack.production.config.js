@@ -20,5 +20,6 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin([buildDir])
-  ]
+  ],
+  production: true
 };
