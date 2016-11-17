@@ -11,4 +11,4 @@ const config = {
     host: 'localhost'
   }
 };
-export default config;
+module.exports = config;
