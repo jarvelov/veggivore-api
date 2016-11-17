@@ -4,6 +4,9 @@ const config = {
   restify: {
     host: {
       port: 8080
+    },
+    authentication: {
+      secret: 'supersecretstring'
     }
   },
   mongodb: {
