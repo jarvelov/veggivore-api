@@ -1,5 +1,22 @@
 {
+  "name": "Veggivore-API",
+  "version": "1.0.0",
+  "description": "Backend for Veggivore project",
+  "author": "Tobias Järvelöv <tobias@jarvelov.se>",
+  "private": true,
+  "scripts": {
+    "dev": "node src/server.js",
+    "postinstall": "npm rebuild",
+    "build": "node node_modules/webpack/bin/webpack.js -p --config ./webpack.production.config.js",
+    "serve": "node node_modules/pm2/bin/pm2 start build/server.js --watch --name=Veggivore-API",
+    "prod": "npm run build && npm run serve",
+    "unit": "karma start test/unit/karma.conf.js --single-run",
+    "e2e": "node test/e2e/runner.js",
+    "test": "npm run unit && npm run e2e",
+    "lint": "eslint --ext .js src test/unit/specs test/e2e/specs"
+  },
   "dependencies": {
+    "bcrypt": "^0.8.7",
     "bcrypt-as-promised": "^1.1.0",
     "client-sessions": "^0.7.0",
     "jsonwebtoken": "^7.1.9",
@@ -7,7 +24,6 @@
     "mongoose-autopopulate": "^0.4.0",
     "mongoose-schema-extend": "^0.2.2",
     "node-restify-validation": "^1.0.5",
-    "nodemon": "^1.11.0",
     "passport-jwt": "^2.1.0",
     "passport-local": "^1.0.0",
     "passport-restify": "^1.0.1",
@@ -16,12 +32,17 @@
   },
   "devDependencies": {
     "babel-core": "^6.17.0",
+    "babel-eslint": "^7.1.0",
     "babel-loader": "^6.2.5",
     "babel-preset-es2015": "^6.16.0",
     "clean-webpack-plugin": "^0.1.13",
-    "gulp": "^3.9.1",
-    "gulp-util": "^3.0.7",
-    "webpack": "^1.13.2",
+    "eslint": "^3.10.2",
+    "eslint-config-standard": "^6.2.1",
+    "eslint-loader": "^1.6.1",
+    "eslint-plugin-promise": "^3.3.2",
+    "eslint-plugin-standard": "^2.0.1",
+    "webpack": "^1.13.3",
+    "webpack-dev-middleware": "^1.8.4",
     "webpack-node-externals": "^1.5.4"
   }
 }
