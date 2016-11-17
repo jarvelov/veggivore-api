@@ -1,36 +1,48 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const autopopulate = require('mongoose-autopopulate');
 
 module.exports = (models, config) => {
   const Revisions = new Schema({
     title: {
-      type: String,
-      required: true
+      required: true,
+      type: String
     },
     content: {
-      type: String,
-      required: true
+      required: true,
+      type: String
     },
     sources: {
-      type: [String],
-      required: true
+      autopopulate: true,
+      type: [Schema.Types.ObjectId],
+      ref: 'Sources'
+    },
+    user: {
+      required: true,
+      autopopulate: true,
+      type: Schema.Types.ObjectId,
+      ref: 'Users'
+    },
+    contributors: {
+      required: true,
+      autopopulate: true,
+      type: [Schema.Types.ObjectId],
+      ref: 'Contributors'
     },
     images: {
+      autopopulate: true,
       type: [Schema.Types.ObjectId],
       ref: 'Images'
     },
     categories: {
       type: [Schema.Types.ObjectId],
+      autopopulate: true,
       ref: 'Categories'
     },
     tags: {
+      autopopulate: true,
       type: [Schema.Types.ObjectId],
       ref: 'Tags'
-    },
-    user: {
-      type: Schema.Types.ObjectId,
-      ref: 'Users',
-      required: true
     },
     anonymous: {
       type: Boolean,
@@ -43,6 +55,8 @@ module.exports = (models, config) => {
   Revisions.set('toJSON', {
     virtuals: true
   });
+
+  Revisions.plugin(autopopulate);
 
   return mongoose.model('Revisions', Revisions);
 };

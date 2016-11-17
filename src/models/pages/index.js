@@ -5,20 +5,21 @@ const Schema = mongoose.Schema;
 module.exports = (models, config) => {
   const Pages = new Schema({
     uri: {
-      type: String,
-      required: true
-    },
-    author: {
-      type: Schema.Types.ObjectId,
       required: true,
-      ref: 'Users',
-      autopopulate: true
+      type: String
+    },
+    user: {
+      required: true,
+      autopopulate: true,
+      type: Schema.Types.ObjectId,
+      ref: 'Users'
     },
     revision: {
       current: {
+        required: true,
+        autopopulate: true,
         type: Schema.Types.ObjectId,
-        ref: 'Revisions',
-        autopopulate: true
+        ref: 'Revisions'
       },
       history: {
         type: [Schema.Types.ObjectId],
@@ -26,20 +27,21 @@ module.exports = (models, config) => {
       }
     },
     contributors: {
-      type: [models.Embedded.Contributor.schema]
+      type: [Schema.Types.ObjectId],
+      ref: 'Contributors'
     },
-    meta: {
-      likes: {
-        type: [Schema.Types.ObjectId],
-        ref: 'Likes'
-      },
-      votes: {
-        type: [Schema.Types.ObjectId],
-        ref: 'Votes'
-      },
-      rating: {
-        type: Number
-      }
+    likes: {
+      type: [Schema.Types.ObjectId],
+      ref: 'Likes'
+    },
+    votes: {
+      type: [Schema.Types.ObjectId],
+      ref: 'Votes'
+    },
+    rank: {
+      type: Number,
+      min: 0,
+      max: 5
     }
   }, {
     timestamps: true
@@ -48,6 +50,8 @@ module.exports = (models, config) => {
   Pages.set('toJSON', {
     virtuals: true
   });
+
+  Pages.plugin(autopopulate);
 
   return mongoose.model('Pages', Pages);
 };

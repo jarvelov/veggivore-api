@@ -3,21 +3,13 @@ const autopopulate = require('mongoose-autopopulate');
 const Schema = mongoose.Schema;
 
 module.exports = (models, config) => {
-  const Companies = new Schema({
-    uri: {
-      required: true,
-      type: String
-    },
+  const Stores = new Schema({
     title: {
       required: true,
       type: String
     },
     description: {
       type: String
-    },
-    contact: {
-      type: [Schema.Types.ObjectId],
-      ref: 'ContactDetails'
     },
     images: {
       type: [Schema.Types.ObjectId],
@@ -28,30 +20,20 @@ module.exports = (models, config) => {
       type: [Schema.Types.ObjectId],
       ref: 'Pages'
     },
-    stores: {
+    contact: {
       autopopulate: true,
       type: [Schema.Types.ObjectId],
-      ref: 'Pages'
+      ref: 'ContactDetails'
     },
-    restaurants: {
+    locations: {
       autopopulate: true,
       type: [Schema.Types.ObjectId],
-      ref: 'Pages'
-    },
-    employees: {
-      autopopulate: true,
-      type: [Schema.Types.ObjectId],
-      ref: 'Users'
+      ref: 'Locations'
     }
   }, {
     timestamps: true
   });
 
-  Companies.plugin(autopopulate);
-
-  Companies.set('toJSON', {
-    virtuals: true
-  });
-
-  return mongoose.model('Companies', Companies);
+  Stores.plugin(autopopulate);
+  return mongoose.model('Stores', Stores);
 };

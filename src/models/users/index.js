@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const autopopulate = require('mongoose-autopopulate');
 const bcrypt = require('bcrypt-as-promised');
 const Schema = mongoose.Schema;
 
@@ -7,24 +6,24 @@ module.exports = (models, config) => {
   const Users = new Schema({
     name: {
       first: {
-        type: String,
-        required: true
+        required: true,
+        type: String
       },
       last: {
-        type: String,
-        required: true
+        required: true,
+        type: String
       }
     },
     password: {
-      type: String,
       required: true,
-      select: false
+      select: false,
+      type: String
     },
     email: {
-      type: String,
       required: true,
+      unique: true,
       index: true,
-      unique: true
+      type: String
     },
     profile: {
       description: {
@@ -37,13 +36,25 @@ module.exports = (models, config) => {
       website: {
         type: String
       }
+    },
+    pages: {
+      type: [Schema.Types.ObjectId],
+      ref: 'Pages'
+    },
+    votes: {
+      type: [Schema.Types.ObjectId],
+      ref: 'Votes'
+    },
+    likes: {
+      type: [Schema.Types.ObjectId],
+      ref: 'Likes'
+    },
+    companies: {
+      type: [Schema.Types.ObjectId],
+      ref: 'Companies'
     }
   }, {
     timestamps: true
-  });
-
-  Users.set('toJSON', {
-    virtuals: true
   });
 
   Users.pre('save', function (next) {
@@ -70,16 +81,20 @@ module.exports = (models, config) => {
     let user = this;
 
     return user.comparePassword(password)
-    .then(isMatch => {
-      if (!isMatch) {
-        return bcrypt.hash(password, 10)
-        .then(hash => {
-          user.password = hash;
-          return user.save();
-        });
-      }
-    });
+      .then(isMatch => {
+        if (!isMatch) {
+          return bcrypt.hash(password, 10)
+            .then(hash => {
+              user.password = hash;
+              return user.save();
+            });
+        }
+      });
   };
+
+  Users.set('toJSON', {
+    virtuals: true
+  });
 
   return mongoose.model('Users', Users);
 };

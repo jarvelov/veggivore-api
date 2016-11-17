@@ -1,7 +1,8 @@
 module.exports = (models, config) => {
   models.Embedded = {};
-  models.Embedded.Contact = require('./contact')(models, config);
-  models.Embedded.Contributor = require('./contributor')(models, config);
+  models.Embedded.ContactInformation = require('./contact-information')(models, config);
+  models.Embedded.Locations = require('./locations')(models, config);
+  models.Embedded.Sources = require('./sources')(models, config);
 
   return models.Embedded;
 };
