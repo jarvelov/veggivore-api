@@ -9,20 +9,12 @@ module.exports = (server, models, config) => {
   passport.use('jwt', require('./jwt')(server, models, config));
 
   // Middleware to figure out if user is authenticated or not
-
   passport.serializeUser((user, cb) => {
     cb(null, user);
   });
 
   passport.deserializeUser((userId, cb) => {
     // TODO: Do something here? Invalidate token?
+    cb(null, userId);
   });
-
-  /* TODO: This might be useful sometime?
-  const isAuthenticated = (req, res, next) => {
-    if (req.isAuthenticated()) {
-      return next();
-    }
-  };
-  */
 };
