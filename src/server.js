@@ -15,31 +15,12 @@ const models = require('./models')(config);
 
 // Restify server
 const server = require('./config/restify')(models, config);
+
 // Set up the routes for restify server
 require('./routes')(server, models, config);
 
-// Only fire up a server with webpack in watch mode when in development
-if (process.env.NODE_ENV !== 'production') {
-  const Webpack = require('webpack');
-  const webpackConfig = require('../webpack.dev.config.js');
-
-  // First we fire up Webpack and pass in the configuration
-  const compiler = Webpack(webpackConfig);
-
-  const devMiddleware = require('webpack-dev-middleware')(compiler, {
-    publicPath: webpackConfig.output.publicPath,
-    stats: {
-      colors: true,
-      chunks: false
-    }
-  });
-
-  // serve webpack bundle output
-  server.use(devMiddleware);
-}
-
 // Start server
-module.exports = server.listen(config.restify.host.port, function (err) {
+server.listen(config.restify.host.port, (err) => {
   if (err) {
     console.log(err);
     return;
