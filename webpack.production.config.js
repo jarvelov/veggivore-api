@@ -20,13 +20,14 @@ module.exports = {
       include: srcDir,
       exclude: /node_modules/
     }],
-    loaders: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: 'babel-loader'
-      }
-    ]
+    loaders: [{
+      test: /\.js$/,
+      exclude: /node_modules/,
+      loader: 'babel-loader'
+    }]
+  },
+  eslint: {
+    formatter: require('eslint-friendly-formatter')
   },
   plugins: [
     new CleanWebpackPlugin([buildDir])
