@@ -2,7 +2,7 @@ const path = require('path');
 const nodemon = require('nodemon');
 
 const Webpack = require('webpack');
-const webpackConfig = require('../webpack.dev.config.js');
+const webpackConfig = require('./webpack.dev.config.js');
 
 // First we fire up Webpack and pass in the configuration
 const compiler = Webpack(webpackConfig);
