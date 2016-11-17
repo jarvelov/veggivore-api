@@ -35,8 +35,5 @@ Starts `nodemon` to handle server
 ### TODO
 
 * Fix all lint errors
-* Don't use the /pages/ prefix on routes, use /[ROUTE]/pages instead, but keep the /pages route to aggregate all pages
-  * We want this since you might want to access other properties, such as a company's employees using /companies/[COMPANY]/employees
-  * Or: /companies/[COMPANY]/stores, /companies/[COMPANY]/locations etc.
 * Set up server clustering
 * Add versioned API
