@@ -2,8 +2,7 @@ const path = require('path');
 
 const nodeExternals = require('webpack-node-externals');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-
-const buildDir = __dirname + '/build/';
+const buildDir = path.join(__dirname, '/build/');
 
 module.exports = {
   context: __dirname,
@@ -16,7 +15,7 @@ module.exports = {
   },
   module: {
     loaders: [
-      { test: /\.js$/, exclude: /node_modules/, loader: "babel-loader" }
+      { test: /\.js$/, exclude: /node_modules/, loader: 'babel-loader' }
     ]
   },
   plugins: [
