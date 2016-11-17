@@ -1,43 +1,35 @@
-const restify = require('restify');
 const passport = require('passport-restify');
 
 module.exports = (server, models, config) => {
-
   server.post({
-    'path': '/pages/companies',
+    'path': '/recipes',
     'validation': {
       'resources': {
         'title': {
           'isRequired': true
         },
-        'description': {
+        'ingredients': {
+          'isRequired': true
+        },
+        'content': {
+          'isRequired': true
+        },
+        'categories': {
+          'isRequired': true
+        },
+        'tags': {
           'isRequired': false
         },
-        'phone': {
-          'isRequired': false
-        },
-        'website': {
-          'isRequired': false
+        'sources': {
+          'isRequired': false,
+          'isArray': true // TODO: This validator doesn't exist, create it
         },
         'images': {
           'isRequired': false,
-          'isArray': true //TODO: This validator doesn't exist, create it
+          'isArray': true // TODO: This validator doesn't exist, create it
         },
-        'products': {
-          'isRequired': false,
-          'isArray': true
-        },
-        'stores': {
-          'isRequired': false,
-          'isArray': true
-        },
-        'restaurants': {
-          'isRequired': false,
-          'isArray': true
-        },
-        'employees': {
-          'isRequired': false,
-          'isArray': true
+        'anonymous': {
+          'isRequired': false
         }
       }
     }

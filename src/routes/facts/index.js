@@ -1,10 +1,8 @@
-const restify = require('restify');
 const passport = require('passport-restify');
 
 module.exports = (server, models, config) => {
-
   server.post({
-    'path': '/pages/facts',
+    'path': '/facts',
     'validation': {
       'resources': {
         'title': {
@@ -15,7 +13,7 @@ module.exports = (server, models, config) => {
         },
         'sources': {
           'isRequired': false,
-          'isArray': true //TODO: This validator doesn't exist, create it
+          'isArray': true // TODO: This validator doesn't exist, create it
         },
         'categories': {
           'isRequired': true
@@ -25,7 +23,7 @@ module.exports = (server, models, config) => {
         },
         'images': {
           'isRequired': false,
-          'isArray': true //TODO: This validator doesn't exist, create it
+          'isArray': true // TODO: This validator doesn't exist, create it
         },
         'anonymous': {
           'isRequired': false

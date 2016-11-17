@@ -1,10 +1,8 @@
-const restify = require('restify');
 const passport = require('passport-restify');
 
 module.exports = (server, models, config) => {
-
   server.post({
-    'path': '/pages/products',
+    'path': '/products',
     'validation': {
       'resources': {
         'title': {
@@ -24,11 +22,11 @@ module.exports = (server, models, config) => {
         },
         'sources': {
           'isRequired': false,
-          'isArray': true //TODO: This validator doesn't exist, create it
+          'isArray': true // TODO: This validator doesn't exist, create it
         },
         'images': {
           'isRequired': false,
-          'isArray': true //TODO: This validator doesn't exist, create it
+          'isArray': true // TODO: This validator doesn't exist, create it
         },
         'anonymous': {
           'isRequired': false
@@ -36,6 +34,7 @@ module.exports = (server, models, config) => {
       }
     }
   }, passport.authenticate('jwt'), (req, res, next) => {
+    /*
     const revisionOptions = {
       content: req.params.content,
       categories: req.params.categories,
@@ -43,7 +42,6 @@ module.exports = (server, models, config) => {
     };
 
     const Revision = new models.Revisions.Product(revisionOptions);
-    /*
 
     const pageOptions = {
       uri: req.params.title.toLowerCase(),

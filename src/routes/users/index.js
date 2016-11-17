@@ -138,7 +138,7 @@ module.exports = (server, models, config) => {
           }
         }
       }
-    },
+    }
   }, passport.authenticate('jwt'), (req, res, next) => {
     return models.Users.update({
         'params': {}
@@ -189,7 +189,7 @@ module.exports = (server, models, config) => {
         }
       }
     }
-  }, (req, res, next) => { //No authentication required
+  }, (req, res, next) => { // No authentication required
     const User = new models.Users({
       name: {
         first: req.params.name.first,
@@ -202,7 +202,7 @@ module.exports = (server, models, config) => {
     return User.save()
       .then(result => {
         result = result.toObject();
-        delete result.password; //We don't want to expose the password, remove it before sending
+        delete result.password; // We don't want to expose the password, remove it before sending
         return result;
       })
       .then(result => {
