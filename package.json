@@ -8,7 +8,7 @@
     "dev": "node src/server.js",
     "postinstall": "npm rebuild",
     "build": "node node_modules/webpack/bin/webpack.js -p --config ./webpack.production.config.js",
-    "serve": "node node_modules/pm2/bin/pm2 start build/server.js --watch --name=Veggivore-API",
+    "serve": "NODE_ENV=production node node_modules/pm2/bin/pm2 start build/server.js --watch --name=Veggivore-API",
     "prod": "npm run build && npm run serve",
     "unit": "karma start test/unit/karma.conf.js --single-run",
     "e2e": "node test/e2e/runner.js",
