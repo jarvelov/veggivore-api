@@ -1,5 +1,7 @@
 # Veggivore-API
 
+> Veggivore API server  
+
 ## Pre-install
 
 Install [`yarn`](https://yarnpkg.com)
