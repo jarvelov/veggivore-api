@@ -6,7 +6,7 @@ module.exports = (models, config) => {
     name: config.restify.name,
     version: config.restify.version,
     formatters: {
-      'application/json': function(req, res, body, cb) {
+      'application/json': (req, res, body, cb) => {
         try {
           return cb(null, JSON.stringify(body, null, '\t'));
         } catch (err) {
@@ -22,7 +22,7 @@ module.exports = (models, config) => {
 
   server.use(restify.bodyParser({
     mapParams: true,
-    mapFiles: false,
+    mapFiles: false
   }));
   server.use(restify.queryParser());
 
