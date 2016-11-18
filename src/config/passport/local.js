@@ -12,7 +12,7 @@ module.exports = (server, models, config) => {
       .findOne({
         email: email
       })
-      .select('+password')
+      .select('+password +email')
       .then(user => {
         return user.comparePassword(password, user.password)
           .then(isMatch => {
