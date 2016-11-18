@@ -62,6 +62,9 @@ module.exports = (server, models, config) => {
       });
       operations.push(Page);
 
+      // Update Revision object so we have attributes referring to each other both ways between Page and Revision
+      Revision.page = Page.id;
+
       // Now configure a Contributors object
       const Contributors = new models.Contributors({
         user: req.user.id,
@@ -119,6 +122,9 @@ module.exports = (server, models, config) => {
     'validation': {
       'queries': {
         'title': {
+          'isRequired': false
+        },
+        'uri': {
           'isRequired': false
         },
         'categories': {
