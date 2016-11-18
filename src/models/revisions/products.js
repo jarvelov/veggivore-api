@@ -21,6 +21,7 @@ module.exports = (models, config) => {
       ref: 'Companies'
     }
   }, {
+    collection: 'revisions',
     timestamps: true
   });
 

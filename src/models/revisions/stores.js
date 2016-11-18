@@ -32,6 +32,7 @@ module.exports = (models, config) => {
       ref: 'Products'
     }
   }, {
+    collection: 'revisions',
     timestamps: true
   });
 

@@ -12,6 +12,11 @@ module.exports = (models, config) => {
       required: true,
       type: String
     },
+    page: {
+      required: true,
+      type: Schema.Types.ObjectId,
+      ref: 'Pages'
+    },
     sources: {
       autopopulate: true,
       type: [Schema.Types.ObjectId],
@@ -23,20 +28,14 @@ module.exports = (models, config) => {
       type: Schema.Types.ObjectId,
       ref: 'Users'
     },
-    contributors: {
-      required: true,
-      autopopulate: true,
-      type: [Schema.Types.ObjectId],
-      ref: 'Contributors'
-    },
     images: {
       autopopulate: true,
       type: [Schema.Types.ObjectId],
       ref: 'Images'
     },
     categories: {
-      type: [Schema.Types.ObjectId],
       autopopulate: true,
+      type: [Schema.Types.ObjectId],
       ref: 'Categories'
     },
     tags: {
