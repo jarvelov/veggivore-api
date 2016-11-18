@@ -205,8 +205,9 @@ module.exports = (server, models, config) => {
 
     return User.save()
       .then(result => {
+        // We don't want to expose the password, remove it before sending
         result = result.toObject();
-        delete result.password; // We don't want to expose the password, remove it before sending
+        delete result.password;
         return result;
       })
       .then(result => {
