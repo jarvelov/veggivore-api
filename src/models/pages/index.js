@@ -6,6 +6,8 @@ module.exports = (models, config) => {
   const Pages = new Schema({
     uri: {
       required: true,
+      index: true,
+      unique: true,
       type: String
     },
     user: {
