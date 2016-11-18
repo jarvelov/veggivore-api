@@ -9,13 +9,21 @@ module.exports = (models, config) => {
     },
     slug: {
       required: true,
+      unique: true,
+      index: true,
       type: String
+    },
+    type: {
+      required: true,
+      type: String,
+      enum: ['fact', 'product', 'recipe', 'restaurant', 'store']
     }
   }, {
     timestamps: true
   });
 
   Categories.set('toJSON', {
+    versionKey: false,
     virtuals: true
   });
 
