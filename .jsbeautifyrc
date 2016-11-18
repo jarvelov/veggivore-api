@@ -1,0 +1,4 @@
+{
+  "break_chained_methods": true,
+  "unindent_chained_methods": true
+}
