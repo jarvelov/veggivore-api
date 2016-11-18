@@ -23,6 +23,7 @@ module.exports = (models, config) => {
       required: true,
       unique: true,
       index: true,
+      select: false,
       type: String
     },
     profile: {
