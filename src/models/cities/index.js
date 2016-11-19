@@ -14,7 +14,7 @@ module.exports = (models, config) => {
       type: String
     },
     location: {
-      type: [models.Embedded.Coordinates.schema]
+      type: [models.Embedded.Coordinates]
     }
   }, {
     timestamps: true

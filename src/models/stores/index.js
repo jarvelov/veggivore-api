@@ -22,8 +22,7 @@ module.exports = (models, config) => {
     },
     contact: {
       autopopulate: true,
-      type: [Schema.Types.ObjectId],
-      ref: 'ContactDetails'
+      type: [models.Embedded.ContactDetails]
     },
     locations: {
       autopopulate: true,

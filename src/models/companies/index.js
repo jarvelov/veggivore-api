@@ -16,8 +16,7 @@ module.exports = (models, config) => {
       type: String
     },
     contact: {
-      type: [Schema.Types.ObjectId],
-      ref: 'ContactDetails'
+      type: [models.Embedded.ContactDetails]
     },
     images: {
       type: [Schema.Types.ObjectId],

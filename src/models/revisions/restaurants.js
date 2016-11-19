@@ -14,12 +14,12 @@ module.exports = (models, config) => {
     contact: {
       required: true,
       autopopulate: true,
-      type: models.Embedded.ContactDetails.schema
+      type: models.Embedded.ContactDetails
     },
     location: {
       required: true,
       autopopulate: true,
-      type: models.Embedded.Locations.schema
+      type: models.Embedded.Locations
     },
     availability: {
       required: true,

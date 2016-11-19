@@ -18,7 +18,7 @@ module.exports = (models, config) => {
       ref: 'Pages'
     },
     sources: {
-      type: [models.Embedded.Sources.schema]
+      type: [models.Embedded.Sources]
     },
     user: {
       required: true,

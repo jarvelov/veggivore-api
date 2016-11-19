@@ -5,7 +5,7 @@ module.exports = (models, config) => {
   const RevisionsFacts = models.Revisions.Default.schema.extend({
     sources: {
       required: true,
-      type: [models.Embedded.Sources.schema]
+      type: [models.Embedded.Sources]
     }
   }, {
     collection: 'revisions',
