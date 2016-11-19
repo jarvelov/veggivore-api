@@ -1,5 +1,6 @@
 /**
  * Sample configuration
+ * Copy or rename this file to config.js and change the properties to suit your environment
  *
  * @file /config/config.sample.js
  * @name config.sample.js
