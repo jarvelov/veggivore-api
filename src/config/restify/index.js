@@ -12,7 +12,6 @@ const restifyCustomValidators = require('./validators');
 const _ = require('lodash');
 
 module.exports = (models, config) => {
-  console.log(config.restify);
   const server = restify.createServer({
     name: config.restify.name,
     version: config.restify.version,
