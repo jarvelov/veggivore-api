@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const autopopulate = require('mongoose-autopopulate');
 
 module.exports = (models, config) => {
   const Locations = new Schema({
@@ -16,16 +15,9 @@ module.exports = (models, config) => {
       type: Number
     },
     location: {
-      type: [models.Embedded.Coordinates.schema]
+      type: [models.Embedded.Coordinates]
     }
   });
 
-  Locations.plugin(autopopulate);
-
-  Locations.set('toJSON', {
-    versionKey: false,
-    virtuals: true
-  });
-
-  return mongoose.model('Locations', Locations);
+  return Locations;
 };

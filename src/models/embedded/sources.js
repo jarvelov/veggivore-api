@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const autopopulate = require('mongoose-autopopulate');
 
 module.exports = (models, config) => {
   const Sources = new Schema({
@@ -16,12 +15,5 @@ module.exports = (models, config) => {
     timestamps: true
   });
 
-  Sources.plugin(autopopulate);
-
-  Sources.set('toJSON', {
-    versionKey: false,
-    virtuals: true
-  });
-
-  return mongoose.model('Sources', Sources);
+  return Sources;
 };

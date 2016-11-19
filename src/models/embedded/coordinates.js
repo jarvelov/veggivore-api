@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-const autopopulate = require('mongoose-autopopulate');
 const Schema = mongoose.Schema;
 
 module.exports = (models, config) => {
@@ -12,12 +11,5 @@ module.exports = (models, config) => {
     timestamps: true
   });
 
-  Coordinates.plugin(autopopulate);
-
-  Coordinates.set('toJSON', {
-    versionKey: false,
-    virtuals: true
-  });
-
-  return mongoose.model('Coordinates', Coordinates);
+  return Coordinates;
 };

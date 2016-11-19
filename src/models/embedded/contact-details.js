@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const autopopulate = require('mongoose-autopopulate');
 
 module.exports = (models, config) => {
   const ContactDetails = new Schema({
@@ -35,12 +34,5 @@ module.exports = (models, config) => {
     }
   });
 
-  ContactDetails.plugin(autopopulate);
-
-  ContactDetails.set('toJSON', {
-    versionKey: false,
-    virtuals: true
-  });
-
-  return mongoose.model('ContactDetails', ContactDetails);
+  return ContactDetails;
 };
