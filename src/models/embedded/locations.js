@@ -15,19 +15,15 @@ module.exports = (models, config) => {
     zipcode: {
       type: Number
     },
-    coordinates: {
-      latitude: {
-        type: Number
-      },
-      longitude: {
-        type: Number
-      }
+    location: {
+      type: [models.Embedded.Coordinates.schema]
     }
   });
 
   Locations.plugin(autopopulate);
 
   Locations.set('toJSON', {
+    versionKey: false,
     virtuals: true
   });
 
