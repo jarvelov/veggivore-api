@@ -1,8 +1,10 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const buildDir = path.join(__dirname, '/build/');
 const srcDir = path.join(__dirname, 'src');
+const buildDir = path.join(__dirname, '/build/');
+
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const JsDocPlugin = require('jsdoc-webpack-plugin');
 
 module.exports = {
   context: __dirname,
@@ -30,7 +32,10 @@ module.exports = {
     formatter: require('eslint-friendly-formatter')
   },
   plugins: [
-    new CleanWebpackPlugin([buildDir])
+    new CleanWebpackPlugin([buildDir]),
+    new JsDocPlugin({
+      conf: './jsdoc.conf'
+    })
   ],
   production: true
 };
