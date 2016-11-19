@@ -1,3 +1,9 @@
+/**
+ * @name Routes/Facts
+ * @file /routes/facts/index.js
+ * @module routes/facts
+ */
+
 const passport = require('passport-restify');
 const slug = require('slug');
 const _ = require('lodash');
@@ -40,67 +46,63 @@ module.exports = (server, models, config) => {
       uri: slug(req.params.title, {lower: true})
     });
 
-    return new Promise((resolve, reject) => {
-      // Array to hold all the database operations that need to be performed (promises)
-      const operations = [];
+    // Object to hold all the database operations that need to be performed (promises)
+    const operations = {};
 
-      // First set up the general Page object first
-      const Page = new models.Pages({
+    return new Promise((resolve, reject) => {
+      // First set up the general page object first
+      let page = new models.Pages({
         uri: params.uri,
         user: params.user.id
       });
 
-      operations.push(Page);
+      operations.page = page;
 
-      resolve(operations);
+      resolve();
     })
-    .then(operations => {
-      // Then create the Revision object
-      const Revision = models.Revisions.Facts({
+    .then(() => {
+      // Then create the revision object
+      let revision = models.Revisions.Facts({
         title: params.title,
         content: params.content,
         categories: params.categories,
         tags: params.tags,
-        page: operations[0].id,
+        page: operations.page.id,
         user: params.user.id
       });
 
-      // Set the Page object's current revision to the Revision object
-      operations[0].revision = {
-        current: Revision.id
+      // Set the page object's current revision to the revision object
+      operations.page.revision = {
+        current: revision.id,
+        history: [revision.id]
       };
       // Lastly set up the sources
-      Revision.sources = params.sources.map(item => {
-        return new models.Embedded.Sources({
+      revision.sources = params.sources.map(item => {
+        return {
           uri: item.uri,
-          label: item.label,
-          user: params.user.id,
-          page: operations[0].id,
-          revision: Revision.id
-        });
+          label: item.label
+        };
       });
 
-      operations.push(Revision);
+      operations.revision = revision;
     })
-    .then(operations => {
+    .then(() => {
       // Now configure a Contributors object
-      const Contributor = new models.Contributors({
+      let contributor = new models.Contributors({
         user: params.user.id,
-        page: operations[0].id,
-        revision: operations[1].id,
+        page: operations.page.id,
+        revision: operations.revision.id,
         anonymous: params.anonymous
       });
 
-      operations.push(Contributor);
+      operations.contributor = contributor;
 
-      // Then set the Contributors object to the Page object so they both refer to each other
-      operations[0].contributors = [Contributor.id];
-
-      return operations;
+      // Then set the Contributors object to the page object so they both refer to each other
+      operations.page.contributors = [contributor.id];
     })
-    .then(operations => {
-      operations = operations.map(o => (o.save()));
-      return Promise.all(operations);
+    .then(() => {
+      let inserts = Object.keys(operations).map(k => (operations[k].save()));
+      return Promise.all(inserts);
     })
     .then(result => {
       res.json({
@@ -109,17 +111,35 @@ module.exports = (server, models, config) => {
       });
     })
     .catch(err => {
-      console.log(err);
+      console.error(err);
       return next(err);
     });
   });
-
+  /**
+   * Update page
+   * @function
+   *
+   * @name update
+   * @memberof: Routes/Facts/PUT
+   * @version 1:
+   * @param {String} title The title of the page
+   * @param {String} content The page's content
+   * @param {Object[]} sources Source links used in the page
+   * @param {String} sources[].uri - The uri of the source link
+   * @param {String} sources[].label - The label of the source
+   * @param {String[]} categories Array of {@link Models#Categories} ID's
+   * @param {String[]} tags Array of {@link Models#Tags} ID's
+   * @param {String[]} images Array of {@link Models#Images} ID's
+   * @param {Boolean} anonymous Whether the user should be visible
+   * @returns {JSON}
+   */
   server.put({
-    'path': '/facts/:id',
-    'validation': {
-      'resources': {
-        'id': {
-          'isRequired': true
+    name: 'update',
+    path: '/facts/:id',
+    validation: {
+      resources: {
+        id: {
+          isRequired: true
         },
         'title': {
           'isRequired': true
@@ -144,7 +164,8 @@ module.exports = (server, models, config) => {
           'isArray': true // TODO: This validator doesn't exist, create it
         },
         'anonymous': {
-          'isRequired': false
+          'isRequired': false,
+          'isBoolean': true
         }
       }
     }
@@ -153,17 +174,21 @@ module.exports = (server, models, config) => {
       tags: []
     }, req.params, {user: req.user});
 
+    // Array to hold all the database insertions that need to be performed (should be promises)
     const operations = {};
 
     return models.Pages.findOne({
       _id: req.params.id
     })
     .then(page => {
-      // Array to hold all the database operations that need to be performed (promises)
-      operations.page = page;
+      if (page) {
+        operations.page = page;
+      } else {
+        throw new Error('Not found'); // TODO: Restify error here
+      }
     })
     .then(() => {
-      // First create the Revision object for the update
+      // First create the revision object for the update
       let revision = models.Revisions.Facts({
         title: params.title,
         content: params.content,
@@ -174,15 +199,19 @@ module.exports = (server, models, config) => {
       });
 
       // Then set up the revision's sources
-      revision.sources = params.sources.map(item => {
-        return new models.Embedded.Sources({
+      revision.sources = params.sources.map((item, i) => {
+        let source = {
           uri: item.uri,
-          label: item.label,
-          user: params.user.id,
-          page: operations.page.id,
-          revision: revision.id
-        });
+          label: item.label
+        };
+
+        return source;
       });
+
+      // Set the new revision object to be the page's current one
+      operations.page.revision.current = revision.id;
+      // Push it to the history as well
+      operations.page.revision.history.push(revision.id);
 
       // Add the revision's object to be inserted
       operations.revision = revision;
@@ -212,27 +241,24 @@ module.exports = (server, models, config) => {
         }
       })
       .then(contributor => {
-        // Then add the Contributors object ID to the Page object's contributors array, if it's not already there
+        // Then add the Contributors object ID to the page object's contributors array, if it's not already there
         if (operations.page.contributors.indexOf(contributor.id) === -1) {
           operations.page.contributors.push(contributor.id);
         }
       });
     })
     .then(() => {
+      // Save all operations to insert them to the database
       let inserts = Object.keys(operations).map(k => (operations[k].save()));
       return Promise.all(inserts);
     })
-    .then(() => {
-      return operations.page;
-    })
     .then(result => {
       res.json({
-        success: true,
-        data: result
+        success: true
       });
     })
     .catch(err => {
-      console.log(err);
+      console.error(err);
       return next(err);
     });
   });
@@ -282,7 +308,7 @@ module.exports = (server, models, config) => {
       });
     })
     .catch(err => {
-      console.log(err);
+      console.error(err);
       return next(err);
     });
   });
