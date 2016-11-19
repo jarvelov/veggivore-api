@@ -9,7 +9,7 @@
 
 const config = {
   restify: {
-    name: 'Restify API',
+    name: 'Veggivore API',
     version: '0.0.1',
     host: {
       port: 8080
