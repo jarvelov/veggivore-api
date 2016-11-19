@@ -1,16 +1,28 @@
+/**
+ * Configures the restify server instance
+ *
+ * @file /config/restify/index.js
+ * @name index.js
+ * @namespace config
+ * @module restify
+ */
 const restify = require('restify');
 const restifyValidation = require('node-restify-validation');
+const restifyCustomValidators = require('./validators');
+const _ = require('lodash');
 
 module.exports = (models, config) => {
   const server = restify.createServer({
     name: config.restify.name,
     version: config.restify.version,
     formatters: {
-      'application/json': (req, res, body, cb) => {
+      'application/json': (req, res, body, next) => {
         try {
-          return cb(null, JSON.stringify(body, null, '\t'));
+          return next(null, JSON.stringify(body, null, '\t'));
         } catch (err) {
-          console.error(body);
+          console.error(body); // TODO: Write error and body to error log
+          let error = new restify.errors.InternalServerError('Something went wrong on our end, hopefully it won\'t happen again');
+          return next(error);
         }
       }
     }
@@ -33,14 +45,26 @@ module.exports = (models, config) => {
   // Compress response
   server.use(restify.gzipResponse());
 
+  // Register custom validators
+  _.extend(restifyValidation.validation._validators, restifyCustomValidators);
+
   // Restify parameter validation
   server.use(restifyValidation.validationPlugin({
-    // Shows errors as an array
-    errorsAsArray: false,
+    // Return errors as an array
+    errorsAsArray: true,
     // Exclude variables not specified in validator rules
     forbidUndefinedVariables: true,
-    errorHandler: restify.errors.InvalidArgumentError
+    handleError: function (res, errors, next) {
+      res.json({
+        success: false,
+        error: errors
+      });
+      return next(false);
+    }
   }));
+
+  // Set up error handlers
+  require('./error-handlers')(server);
 
   // Set up authentication
   require('../passport')(server, models, config);
