@@ -18,9 +18,7 @@ module.exports = (models, config) => {
       ref: 'Pages'
     },
     sources: {
-      autopopulate: true,
-      type: [Schema.Types.ObjectId],
-      ref: 'Sources'
+      type: [models.Embedded.Sources.schema]
     },
     user: {
       required: true,
