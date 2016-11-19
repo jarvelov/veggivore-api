@@ -4,9 +4,6 @@ const nodemon = require('nodemon');
 const Webpack = require('webpack');
 const webpackConfig = require('./webpack.dev.config.js');
 
-// First we fire up Webpack and pass in the configuration
-const compiler = Webpack(webpackConfig);
-
 const startServer = () => {
   nodemon({
     execMap: {
@@ -23,7 +20,11 @@ const restartServer = () => {
   console.log('Server restarted!');
 };
 
-let initialized = false;
+let initialized = false; // Whether server has been started once at least
+
+// First we fire up Webpack and pass in the configuration
+const compiler = Webpack(webpackConfig);
+
 compiler.plugin('done', () => {
   if (!initialized) {
     startServer();
