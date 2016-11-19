@@ -29,6 +29,7 @@ module.exports = (models, config) => {
       }
     },
     contributors: {
+      required: true,
       type: [Schema.Types.ObjectId],
       ref: 'Contributors'
     },
