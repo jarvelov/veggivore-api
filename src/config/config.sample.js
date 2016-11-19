@@ -1,3 +1,11 @@
+/**
+ * Sample configuration
+ *
+ * @file /config/config.sample.js
+ * @name config.sample.js
+ * @namespace config
+ */
+
 const config = {
   name: 'Restify API',
   version: '0.0.1',
