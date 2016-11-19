@@ -26,6 +26,6 @@ server.listen(config.restify.host.port, (err) => {
     return;
   }
 
-  let uri = 'http://localhost:' + config.restify.host.port;
-  console.log('Listening at ' + uri + '\n');
+  let url = 'http://localhost:' + config.restify.host.port;
+  console.log('Listening at ' + url + '\n');
 });

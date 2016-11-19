@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 module.exports = (models, config) => {
   const Images = new Schema({
-    uri: {
+    url: {
       required: true,
       type: String
     },

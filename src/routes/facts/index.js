@@ -43,7 +43,7 @@ module.exports = (server, models, config) => {
   }, passport.authenticate('jwt'), (req, res, next) => {
     const params = _.merge({}, req.params, {
       user: req.user,
-      uri: slug(req.params.title, {lower: true})
+      url: slug(req.params.title, {lower: true})
     });
 
     // Object to hold all the database operations that need to be performed (promises)
@@ -52,7 +52,7 @@ module.exports = (server, models, config) => {
     return new Promise((resolve, reject) => {
       // First set up the general page object first
       let page = new models.Pages({
-        uri: params.uri,
+        url: params.url,
         user: params.user.id
       });
 
@@ -79,7 +79,7 @@ module.exports = (server, models, config) => {
       // Lastly set up the sources
       revision.sources = params.sources.map(item => {
         return {
-          uri: item.uri,
+          url: item.url,
           label: item.label
         };
       });
@@ -125,7 +125,7 @@ module.exports = (server, models, config) => {
    * @param {String} title The title of the page
    * @param {String} content The page's content
    * @param {Object[]} sources Source links used in the page
-   * @param {String} sources[].uri - The uri of the source link
+   * @param {String} sources[].url - The url of the source link
    * @param {String} sources[].label - The label of the source
    * @param {String[]} categories Array of {@link Models#Categories} ID's
    * @param {String[]} tags Array of {@link Models#Tags} ID's
@@ -201,7 +201,7 @@ module.exports = (server, models, config) => {
       // Then set up the revision's sources
       revision.sources = params.sources.map((item, i) => {
         let source = {
-          uri: item.uri,
+          url: item.url,
           label: item.label
         };
 
@@ -270,7 +270,7 @@ module.exports = (server, models, config) => {
         'title': {
           'isRequired': false
         },
-        'uri': {
+        'url': {
           'isRequired': false
         },
         'categories': {

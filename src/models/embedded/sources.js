@@ -4,7 +4,7 @@ const autopopulate = require('mongoose-autopopulate');
 
 module.exports = (models, config) => {
   const Sources = new Schema({
-    uri: {
+    url: {
       required: true,
       type: String
     },

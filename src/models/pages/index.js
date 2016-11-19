@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 module.exports = (models, config) => {
   const Pages = new Schema({
-    uri: {
+    url: {
       required: true,
       index: true,
       unique: true,

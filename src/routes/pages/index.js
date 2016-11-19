@@ -5,7 +5,7 @@ module.exports = (server, models, config) => {
   // Delete a page
 
   server.del({
-    path: '/pages/:uri',
+    path: '/pages/:url',
     validation: {
       id: {
         isRequired: true
@@ -14,7 +14,7 @@ module.exports = (server, models, config) => {
   }, passport.authenticate('jwt'), (req, res, next) => {
     return models.Pages
       .remove({
-        uri: req.params.uri
+        url: req.params.url
       })
       .then(result => {
         res.json({
@@ -52,10 +52,10 @@ module.exports = (server, models, config) => {
 
   // Get a page
   server.get({
-    path: '/pages/:uri',
+    path: '/pages/:url',
     validation: {
       resources: {
-        uri: {
+        url: {
           isRequired: true
         }
       }
@@ -63,11 +63,11 @@ module.exports = (server, models, config) => {
   }, (req, res, next) => { // No authentication required
     return models.Pages
       .findOne({
-        uri: req.params.uri
+        url: req.params.url
       })
       .then(result => {
         if (!result) {
-          throw new restify.NotFoundError('Page with URI ' + req.params.uri + ' was not found');
+          throw new restify.NotFoundError('Page with url ' + req.params.url + ' was not found');
         }
         return result;
       })
@@ -84,10 +84,10 @@ module.exports = (server, models, config) => {
 
   // Update a page
   server.put({
-    path: '/pages/:uri',
+    path: '/pages/:url',
     validation: {
       resources: {
-        uri: {
+        url: {
           isRequired: true
         }
       }
@@ -97,7 +97,7 @@ module.exports = (server, models, config) => {
       .update({
         params: {}
       }, {
-        uri: req.params.uri
+        url: req.params.url
       })
       .then(result => {
         res.json({

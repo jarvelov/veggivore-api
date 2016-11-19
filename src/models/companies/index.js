@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 module.exports = (models, config) => {
   const Companies = new Schema({
-    uri: {
+    url: {
       required: true,
       type: String
     },

@@ -44,7 +44,7 @@ module.exports = (server, models, config) => {
     const Revision = new models.Revisions.Product(revisionOptions);
 
     const pageOptions = {
-      uri: req.params.title.toLowerCase(),
+      url: req.params.title.toLowerCase(),
       author: req.user._id,
       contributors: [req.user._id],
       revision: {
