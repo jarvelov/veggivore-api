@@ -11,7 +11,7 @@ const _ = require('lodash');
 
 module.exports = (server, models, config) => {
   server.post({
-    'path': '/facts',
+    path: '/facts',
     validation: {
       resources: {
         title: {
@@ -103,7 +103,14 @@ module.exports = (server, models, config) => {
     })
     .then(() => {
       let inserts = Object.keys(operations).map(k => (operations[k].save()));
-      return Promise.all(inserts);
+      return Promise.all(inserts)
+      .catch(err => {
+        if (err.code === 11000) {
+          throw new restify.errors.BadRequestError('Title must be unique');
+        } else {
+          throw new restify.errors.InternalServerError('Unknown error');
+        }
+      });
     })
     .then(result => {
       res.json({
@@ -115,6 +122,7 @@ module.exports = (server, models, config) => {
       return next(err);
     });
   });
+
   /**
    * Update page
    * @function
