@@ -29,6 +29,7 @@ module.exports = (models, config) => {
   RevisionsRecipes.plugin(autopopulate);
 
   RevisionsRecipes.set('toJSON', {
+    versionKey: false,
     virtuals: true
   });
 

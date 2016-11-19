@@ -22,6 +22,7 @@ module.exports = (models, config) => {
   Likes.plugin(autopopulate);
 
   Likes.set('toJSON', {
+    versionKey: false,
     virtuals: true
   });
 

@@ -28,6 +28,7 @@ module.exports = (models, config) => {
   Votes.plugin(autopopulate);
 
   Votes.set('toJSON', {
+    versionKey: false,
     virtuals: true
   });
 

@@ -52,6 +52,7 @@ module.exports = (models, config) => {
   });
 
   Revisions.set('toJSON', {
+    versionKey: false,
     virtuals: true
   });
 

@@ -35,5 +35,11 @@ module.exports = (models, config) => {
   });
 
   Stores.plugin(autopopulate);
+
+  Stores.set('toJSON', {
+    versionKey: false,
+    virtuals: true
+  });
+
   return mongoose.model('Stores', Stores);
 };

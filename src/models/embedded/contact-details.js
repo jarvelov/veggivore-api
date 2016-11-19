@@ -38,6 +38,7 @@ module.exports = (models, config) => {
   ContactDetails.plugin(autopopulate);
 
   ContactDetails.set('toJSON', {
+    versionKey: false,
     virtuals: true
   });
 

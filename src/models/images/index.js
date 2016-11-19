@@ -31,6 +31,7 @@ module.exports = (models, config) => {
   Images.plugin(autopopulate);
 
   Images.set('toJSON', {
+    versionKey: false,
     virtuals: true
   });
 

@@ -50,6 +50,7 @@ module.exports = (models, config) => {
   });
 
   Pages.set('toJSON', {
+    versionKey: false,
     virtuals: true
   });
 

@@ -17,6 +17,7 @@ module.exports = (models, config) => {
   Events.plugin(autopopulate);
 
   Events.set('toJSON', {
+    versionKey: false,
     virtuals: true
   });
 

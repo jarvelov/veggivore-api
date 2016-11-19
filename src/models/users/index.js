@@ -94,6 +94,7 @@ module.exports = (models, config) => {
   };
 
   Users.set('toJSON', {
+    versionKey: false,
     virtuals: true
   });
 

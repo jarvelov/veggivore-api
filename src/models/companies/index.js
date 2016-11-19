@@ -50,6 +50,7 @@ module.exports = (models, config) => {
   Companies.plugin(autopopulate);
 
   Companies.set('toJSON', {
+    versionKey: false,
     virtuals: true
   });
 

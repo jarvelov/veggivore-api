@@ -39,6 +39,7 @@ module.exports = (models, config) => {
   RevisionsStore.plugin(autopopulate);
 
   RevisionsStore.set('toJSON', {
+    versionKey: false,
     virtuals: true
   });
 

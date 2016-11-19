@@ -16,6 +16,7 @@ module.exports = (models, config) => {
   });
 
   Tags.set('toJSON', {
+    versionKey: false,
     virtuals: true
   });
 

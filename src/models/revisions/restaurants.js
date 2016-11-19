@@ -39,6 +39,7 @@ module.exports = (models, config) => {
   RevisionsRestaurants.plugin(autopopulate);
 
   RevisionsRestaurants.set('toJSON', {
+    versionKey: false,
     virtuals: true
   });
 

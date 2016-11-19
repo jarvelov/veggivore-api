@@ -35,6 +35,7 @@ module.exports = (models, config) => {
   Sources.plugin(autopopulate);
 
   Sources.set('toJSON', {
+    versionKey: false,
     virtuals: true
   });
 

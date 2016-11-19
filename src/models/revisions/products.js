@@ -28,6 +28,7 @@ module.exports = (models, config) => {
   RevisionsProducts.plugin(autopopulate);
 
   RevisionsProducts.set('toJSON', {
+    versionKey: false,
     virtuals: true
   });
 
