@@ -4,6 +4,7 @@
  * @module routes/facts
  */
 
+const restify = require('restify');
 const passport = require('passport-restify');
 const slug = require('slug');
 const _ = require('lodash');
@@ -11,32 +12,32 @@ const _ = require('lodash');
 module.exports = (server, models, config) => {
   server.post({
     'path': '/facts',
-    'validation': {
-      'resources': {
-        'title': {
-          'isRequired': true
+    validation: {
+      resources: {
+        title: {
+          isRequired: true
         },
-        'content': {
-          'isRequired': true
+        content: {
+          isRequired: true
         },
-        'sources': {
-          'isRequired': true,
-          'isArray': true // TODO: This validator doesn't exist, create it
+        sources: {
+          isRequired: true,
+          isArray: true
         },
-        'categories': {
-          'isRequired': true,
-          'isArray': true // TODO: This validator doesn't exist, create it
+        categories: {
+          isRequired: true,
+          isObjectIdArray: true
         },
-        'tags': {
-          'isRequired': false,
-          'isArray': true // TODO: This validator doesn't exist, create it
+        tags: {
+          isRequired: false,
+          isObjectIdArray: true
         },
-        'images': {
-          'isRequired': false,
-          'isArray': true // TODO: This validator doesn't exist, create it
+        images: {
+          isRequired: false,
+          isObjectIdArray: true
         },
-        'anonymous': {
-          'isRequired': false
+        anonymous: {
+          isRequired: false
         }
       }
     }
@@ -111,7 +112,6 @@ module.exports = (server, models, config) => {
       });
     })
     .catch(err => {
-      console.error(err);
       return next(err);
     });
   });
@@ -141,31 +141,31 @@ module.exports = (server, models, config) => {
         id: {
           isRequired: true
         },
-        'title': {
-          'isRequired': true
+        title: {
+          isRequired: true
         },
-        'content': {
-          'isRequired': true
+        content: {
+          isRequired: true
         },
-        'sources': {
-          'isRequired': true,
-          'isArray': true // TODO: This validator doesn't exist, create it
+        sources: {
+          isRequired: true,
+          isArray: true // TODO: Write a validator for sources
         },
-        'categories': {
-          'isRequired': true,
-          'isArray': true // TODO: This validator doesn't exist, create it
+        categories: {
+          isRequired: true,
+          isObjectIdArray: true
         },
-        'tags': {
-          'isRequired': false,
-          'isArray': true // TODO: This validator doesn't exist, create it
+        tags: {
+          isRequired: false,
+          isObjectIdArray: true
         },
-        'images': {
-          'isRequired': false,
-          'isArray': true // TODO: This validator doesn't exist, create it
+        images: {
+          isRequired: false,
+          isObjectIdArray: true
         },
-        'anonymous': {
-          'isRequired': false,
-          'isBoolean': true
+        anonymous: {
+          isRequired: false,
+          isBoolean: true
         }
       }
     }
@@ -181,10 +181,12 @@ module.exports = (server, models, config) => {
       _id: req.params.id
     })
     .then(page => {
+      // Check if query returned our page object
       if (page) {
         operations.page = page;
       } else {
-        throw new Error('Not found'); // TODO: Restify error here
+        // Else notify the user that we didn't find what we were looking for
+        throw new restify.errors.NotFoundError('Page with ID ' + req.params.id + ' was not found');
       }
     })
     .then(() => {
@@ -258,28 +260,28 @@ module.exports = (server, models, config) => {
       });
     })
     .catch(err => {
-      console.error(err);
       return next(err);
     });
   });
 
   server.get({
-    'path': '/facts',
-    'validation': {
-      'queries': {
-        'title': {
-          'isRequired': false
+    path: '/facts',
+    validation: {
+      queries: {
+        title: {
+          isRequired: false
         },
-        'url': {
-          'isRequired': false
+        url: {
+          isRequired: false,
+          isUrl: true
         },
-        'categories': {
-          'isRequired': false,
-          'isArray': true // TODO: This validator doesn't exist, create it
+        categories: {
+          isRequired: false,
+          isObjectIdArray: true
         },
-        'tags': {
-          'isRequired': false,
-          'isArray': true // TODO: This validator doesn't exist, create it
+        tags: {
+          isRequired: false,
+          isObjectIdArray: true
         }
       }
     }
@@ -308,7 +310,6 @@ module.exports = (server, models, config) => {
       });
     })
     .catch(err => {
-      console.error(err);
       return next(err);
     });
   });
