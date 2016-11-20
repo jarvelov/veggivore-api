@@ -57,17 +57,6 @@ module.exports = (models, config) => {
     });
   };
 
-  module.createPage = (params) => {
-    return new models.Pages({
-      url: slug(params.title, { lower: true }),
-      user: params.user.id,
-      contributors: [{
-        user: params.user.id,
-        anonymous: params.anonymous
-      }]
-    });
-  };
-
   module.createPage = function (params, modelName) {
     // The model determines Which type of page we are creating
     const model = _.capitalize(modelName);
@@ -75,7 +64,15 @@ module.exports = (models, config) => {
     const operations = {};
 
     // First grab a general page object
-    operations.page = this.createPage(params);
+    operations.page = new models.Pages({
+      url: slug(params.title, { lower: true }),
+      user: params.user.id,
+      contributors: [{
+        user: params.user.id,
+        anonymous: params.anonymous
+      }]
+    });
+
     params.page = operations.page;
 
     // Then create the revision object
