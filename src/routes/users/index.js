@@ -1,5 +1,6 @@
 const restify = require('restify');
 const passport = require('passport-restify');
+const _ = require('lodash');
 
 module.exports = (server, models, config) => {
   server.del({
@@ -20,41 +21,39 @@ module.exports = (server, models, config) => {
       });
   });
 
-  server.get({
-    'path': '/users',
-    'validation': {
-      'queries': {
-        'name': {
-          'first': {
-            'isRequired': false
-          },
-          'last': {
-            'isRequired': false
+  server.post({
+    path: '/users/search',
+    validation: {
+      queries: {
+        id: {
+          isRequired: false,
+          isObjectIdArray: true
+        },
+        name: {
+          isRequired: false,
+          isObject: {
+            keys: ['first', 'last']
           }
         },
-        'email': {
-          'isRequired': false,
-          'isEmail': true
+        email: {
+          isRequired: false,
+          isEmail: true
         },
-        'createdAt': {
-          'isRequired': false,
+        createdAt: {
+          isRequired: false,
           isDate: true
         },
-        'updatedAt': {
-          'isRequired': false,
+        updatedAt: {
+          isRequired: false,
           isDate: true
         }
       }
     }
   }, passport.authenticate('jwt'), (req, res, next) => {
-    console.log(req.params);
-    return models.Users
-      .find({
-        id: req.params.id
-      })
+    return models.Users.search(req.params)
       .then(result => {
         if (!result) {
-          throw new restify.NotFoundError('No users where found');
+          throw new restify.NotFoundError('No users were found');
         }
         return result;
       })
@@ -79,25 +78,75 @@ module.exports = (server, models, config) => {
       }
     }
   }, (req, res, next) => {
-    return models.Users
-      .findOne({
-        id: req.params.id
-      })
-      .then(result => {
-        if (!result) {
-          throw new restify.NotFoundError('No user was found');
-        }
-        return result;
-      })
-      .then(user => {
-        res.json({
-          success: true,
-          data: user
-        });
-      })
-      .catch(err => {
-        return next(err);
+    return models.Users.findOne({
+      _id: req.params.id
+    })
+    .then(user => {
+      if (!user) {
+        throw new restify.NotFoundError('No user was found');
+      }
+      return user;
+    })
+    .then(user => {
+      res.json({
+        success: true,
+        data: user
       });
+    })
+    .catch(err => {
+      return next(err);
+    });
+  });
+
+  server.get({
+    path: '/users/:id/pages',
+    validation: {
+      resources: {
+        id: {
+          isRequired: true
+        }
+      },
+      content: {
+        created: {
+          isRequired: false,
+          isBoolean: true
+        },
+        contributed: {
+          isRequired: false,
+          isBoolean: true
+        }
+      }
+    }
+  }, (req, res, next) => {
+    const params = _.merge({
+      created: true,
+      contributed: true
+    }, {
+      created: (typeof req.params.created === 'undefined' || req.params.created === 'true'),
+      contributed: (typeof req.params.contributed === 'undefined' || req.params.contributed === 'true')
+    });
+
+    return models.Users.findOne({
+      _id: req.params.id
+    })
+    .then(user => {
+      if (!user) {
+        throw new restify.NotFoundError('User with ID ' + req.params.id + ' was not found');
+      }
+      return user;
+    })
+    .then(user => {
+      return user.pages(params);
+    })
+    .then(pages => {
+      res.json({
+        success: true,
+        data: pages
+      });
+    })
+    .catch(err => {
+      return next(err);
+    });
   });
 
   server.put({
