@@ -3,6 +3,12 @@ require('mongoose-schema-extend'); // Just requiring it sets up the schema exten
 
 module.exports = (models, config) => {
   const RevisionsFacts = models.Revisions.Default.schema.extend({
+    type: {
+      required: true,
+      type: String,
+      default: 'facts',
+      enum: ['facts']
+    },
     sources: {
       required: true,
       type: [models.Embedded.Sources]
