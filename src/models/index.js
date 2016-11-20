@@ -8,7 +8,6 @@ module.exports = (config) => {
   models.Categories = require('./categories')(models, config);
   models.Cities = require('./cities')(models, config);
   models.Companies = require('./companies')(models, config);
-  models.Contributors = require('./contributors')(models, config);
   models.Images = require('./images')(models, config);
   models.Likes = require('./likes')(models, config);
   models.Pages = require('./pages')(models, config);
