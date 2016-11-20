@@ -5,7 +5,7 @@
  * @name: validators.js
  * @module restify
  * @namespace config
- * @returns Object with custom  restify-validation validators
+ * @returns Object with custom restify-validation validators
  */
 
 module.exports = {
@@ -13,12 +13,12 @@ module.exports = {
     let value = this.req.params[param]; // Get the value of the param from the request's parameters
 
     // We won't validate an undefined field, return early
-    if (typeof values === 'undefined') {
+    if (typeof value === 'undefined') {
       return;
     }
 
     if (Array.isArray(value)) {
-      return false; // false indicates that there were no errors (I guess?), backwards logic imo, but hey, it works!
+      return;
     } else {
       throw new Error('Invalid type: Expected array but received: ' + value.constructor.name);
     }
