@@ -3,35 +3,24 @@ const Schema = mongoose.Schema;
 
 module.exports = (models, config) => {
   const ContactDetails = new Schema({
-    phone: {
-      type: [String]
+    phones: {
+      type: [{
+        type: String,
+        enum: ['mobile', 'landline']
+      }, {
+        number: {
+          type: String
+        }
+      }]
     },
-    website: {
+    websites: {
       type: [String]
-    },
-    openhours: {
-      monday: {
-        type: [String]
-      },
-      tuesday: {
-        type: [String]
-      },
-      wednesday: {
-        type: [String]
-      },
-      thursday: {
-        type: [String]
-      },
-      friday: {
-        type: [String]
-      },
-      saturday: {
-        type: [String]
-      },
-      sunday: {
-        type: [String]
-      }
     }
+  });
+
+  ContactDetails.set('toJSON', {
+    versionKey: false,
+    virtuals: true
   });
 
   return ContactDetails;
