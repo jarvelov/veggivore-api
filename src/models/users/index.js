@@ -38,10 +38,6 @@ module.exports = (models, config) => {
         type: String
       }
     },
-    pages: {
-      type: [Schema.Types.ObjectId],
-      ref: 'Pages'
-    },
     votes: {
       type: [Schema.Types.ObjectId],
       ref: 'Votes'
@@ -91,6 +87,87 @@ module.exports = (models, config) => {
             });
         }
       });
+  };
+
+  Users.methods.pages = function (params) {
+    let user = this;
+    const query = {};
+    const match = {};
+
+    if (!params.created && !params.contributed) {
+      return []; // You didn't want any pages anyway so why bother waste resources
+    }
+
+    if (params.created === true && params.contributed === true) {
+      match.user = user.id;
+
+      query.contributors = {
+        $elemMatch: {
+          user: user.id
+        }
+      };
+    } else if (params.created === true && params.contributed === false) {
+      match.user = {
+        $ne: user.id
+      };
+    } else if (params.created === false && params.contributed === true) {
+      match.user = {
+        $ne: user.id
+      };
+
+      query.contributors = {
+        $elemMatch: {
+          user: user.id
+        }
+      };
+    }
+
+    return models.Pages.find(query)
+    .populate({
+      path: 'revision.current',
+      match: match
+    })
+    .then(pages => {
+      // Filter out results which haven't populated properly (aka didn't match query + match)
+      return pages.filter(page => (page.revision.current));
+    });
+  };
+
+  Users.statics.search = function (params) {
+    let user = this;
+
+    const query = {};
+    let filters = Object.keys(params).map(param => {
+      let obj = {};
+      switch (param) {
+        case 'createdAt':
+        case 'updatedAt':
+          obj['updatedAt'] = params[param];
+          break;
+        case 'name':
+          let keys = ['first', 'last'];
+
+          keys.forEach(key => {
+            if (key in params[param]) {
+              obj['name.' + key] = {
+                $regex: new RegExp(params[param][key], 'gi')
+              };
+            }
+          });
+          break;
+        default:
+          obj[param] = params[param];
+          break;
+      }
+      return obj;
+    })
+    .filter(filter => (filter));
+
+    if (filters.length > 0) {
+      query.$and = filters;
+    }
+
+    return user.find(query);
   };
 
   Users.set('toJSON', {
