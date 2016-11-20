@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const url = require('url');
 const autopopulate = require('mongoose-autopopulate');
 
 module.exports = (models, config) => {
@@ -55,6 +56,24 @@ module.exports = (models, config) => {
   });
 
   Revisions.plugin(autopopulate);
+
+  Revisions.statics.createRevision = (params) => {
+    return {
+      title: params.title,
+      content: params.content,
+      products: params.products,
+      categories: params.categories,
+      tags: params.tags,
+      user: params.user.id,
+      page: params.page.id,
+      sources: params.sources.map(source => {
+        return {
+          url: source,
+          label: url.parse(source).hostname
+        };
+      })
+    };
+  };
 
   return mongoose.model('Revisions', Revisions);
 };
