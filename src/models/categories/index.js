@@ -16,7 +16,7 @@ module.exports = (models, config) => {
     type: {
       required: true,
       type: String,
-      enum: ['fact', 'product', 'recipe', 'restaurant', 'store']
+      enum: ['facts', 'products', 'recipes', 'restaurants', 'stores']
     }
   }, {
     timestamps: true
