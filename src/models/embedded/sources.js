@@ -15,5 +15,10 @@ module.exports = (models, config) => {
     timestamps: true
   });
 
+  Sources.set('toJSON', {
+    versionKey: false,
+    virtuals: true
+  });
+
   return Sources;
 };
